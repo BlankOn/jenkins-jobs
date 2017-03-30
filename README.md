@@ -1,4 +1,3 @@
-
 # Jenkins Jobs - Seed
 oleh Estu Fardani
 
