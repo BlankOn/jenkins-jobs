@@ -43,3 +43,35 @@ echo "sukses"''')
         }
     }
 }
+
+job("${app}/Manokwari") {
+    description "Manokwari.blankonlinux.or.id"
+    logRotator {
+        daysToKeep(2)
+        numToKeep(2)
+    }
+    scm {
+        git {
+            remote {
+                url('https://github.com/BlankOn/manokwari-boi.git')
+            }
+            branch('master')
+        }
+    }
+    triggers {
+        scm('H/5 * * * *')
+    } 
+
+    steps {
+        shell('''ssh -p2222 situs@waljinah.blankon.in "cd ~/manokwari && git pull origin master"
+echo "sukses"''')
+    }
+    publishers{
+        postBuildScripts {
+            onlyIfBuildSucceeds()
+            steps {
+                shell('curl --data chat_id=-214965156 --data-urlencode "text=Jenkins: Deploy manowari.boi Sukses" "https://api.telegram.org/bot${token}/sendMessage"')
+            }
+        }
+    }
+}
