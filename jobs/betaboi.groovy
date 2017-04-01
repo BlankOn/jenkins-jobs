@@ -38,7 +38,7 @@ echo "sukses"''')
         postBuildScripts {
             onlyIfBuildSucceeds()
             steps {
-                shell('curl --data chat_id=-214965156 --data-urlencode "text=Jenkins: Deploy Beta Sukses"  "https://api.telegram.org/bot$token/sendMessage"')
+                shell('curl --data chat_id=-214965156 --data-urlencode "text=Jenkins: Deploy Beta Sukses" "https://api.telegram.org/bot${token}/sendMessage"')
             }
         }
     }
