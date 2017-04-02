@@ -75,3 +75,41 @@ echo "sukses"''')
         }
     }
 }
+
+job("${app}/Serambi") {
+    description "serambi.blankonlinux.or.id"
+    logRotator {
+        daysToKeep(2)
+        numToKeep(2)
+    }
+    scm {
+        git {
+            remote {
+                url('https://github.com/BlankOn/serambi.git')
+            }
+            branch('master')
+        }
+    }
+    triggers {
+        scm('H/5 * * * *')
+    } 
+
+    steps {
+        shell('''ssh -p2222 situs@waljinah.blankon.in << EOF
+    cd ~/serambi && git pull origin master
+    rm serambi/config.ini
+    cat serambi/config > serambi/config.ini
+    cat serambi/feeds >> serambi/config.ini
+    python planet.py serambi/config.ini
+EOF
+echo "sukses"''')
+    }
+    publishers{
+        postBuildScripts {
+            onlyIfBuildSucceeds()
+            steps {
+                shell('curl --data chat_id=-214965156 --data-urlencode "text=Jenkins: Deploy serambi.boi Sukses" "https://api.telegram.org/bot${token}/sendMessage"')
+            }
+        }
+    }
+}
